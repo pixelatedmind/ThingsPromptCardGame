@@ -13,7 +13,9 @@ export const useWordGenerator = () => {
       theme: '[THEME WORD]'
     },
     history: [],
-    isGenerating: false
+    isGenerating: false,
+    promptImageUrl: null,
+    isImageLoading: false
   });
 
   // Load history from localStorage on mount
@@ -40,6 +42,58 @@ export const useWordGenerator = () => {
       console.warn('Failed to save history to localStorage:', error);
     }
   }, [state.history]);
+
+  const fetchPromptImage = useCallback(async (searchQuery: string) => {
+    const apiKey = import.meta.env.VITE_PEXELS_API_KEY;
+    if (!apiKey) {
+      console.warn('Pexels API key not found');
+      return;
+    }
+
+    setState(prev => ({ ...prev, isImageLoading: true }));
+
+    try {
+      const response = await fetch(
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=15&orientation=landscape`,
+        {
+          headers: {
+            'Authorization': apiKey
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Pexels API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.photos && data.photos.length > 0) {
+        // Get a random image from the results
+        const randomIndex = Math.floor(Math.random() * data.photos.length);
+        const selectedPhoto = data.photos[randomIndex];
+        
+        setState(prev => ({
+          ...prev,
+          promptImageUrl: selectedPhoto.src.large2x,
+          isImageLoading: false
+        }));
+      } else {
+        setState(prev => ({
+          ...prev,
+          promptImageUrl: null,
+          isImageLoading: false
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch image from Pexels:', error);
+      setState(prev => ({
+        ...prev,
+        promptImageUrl: null,
+        isImageLoading: false
+      }));
+    }
+  }, []);
 
   const getRandomWord = useCallback((category: keyof typeof wordCategories): string => {
     const words = wordCategories[category].words;
@@ -82,13 +136,17 @@ export const useWordGenerator = () => {
       timestamp: new Date()
     };
 
+    // Fetch a relevant image based on the generated words
+    const imageSearchQuery = `${newWords.future} ${newWords.thing} ${newWords.theme} futuristic sci-fi`;
+    fetchPromptImage(imageSearchQuery);
+
     setState(prev => ({
       ...prev,
       currentWords: newWords,
       history: [newCombination, ...prev.history].slice(0, MAX_HISTORY_ITEMS),
       isGenerating: false
     }));
-  }, [getRandomWord]);
+  }, [getRandomWord, fetchPromptImage]);
 
   const clearHistory = useCallback(() => {
     setState(prev => ({ ...prev, history: [] }));

@@ -14,6 +14,8 @@ function App() {
     currentWords,
     history,
     isGenerating,
+    promptImageUrl,
+    isImageLoading,
     generateWord,
     generateAllWords,
     clearHistory,
@@ -116,6 +118,8 @@ function App() {
         {showFullscreenPrompt && (
           <FullscreenPromptDisplay
             currentWords={currentWords}
+            promptImageUrl={promptImageUrl}
+            isImageLoading={isImageLoading}
             onClose={handleCloseFullscreenPrompt}
           />
         )}

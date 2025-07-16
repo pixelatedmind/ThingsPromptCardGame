@@ -7,11 +7,15 @@ interface FullscreenPromptDisplayProps {
     thing: string;
     theme: string;
   };
+  promptImageUrl: string | null;
+  isImageLoading: boolean;
   onClose: () => void;
 }
 
 export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = ({
   currentWords,
+  promptImageUrl,
+  isImageLoading,
   onClose
 }) => {
   const [showContent, setShowContent] = useState(false);
@@ -74,6 +78,25 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
     >
       {/* Animated glowing blobs */}
       <div className="absolute inset-0 overflow-hidden">
+        {/* Background image with overlay */}
+        {promptImageUrl && (
+          <div className="absolute inset-0">
+            <img
+              src={promptImageUrl}
+              alt="Prompt inspiration"
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 opacity-80"></div>
+          </div>
+        )}
+        
+        {/* Loading state for image */}
+        {isImageLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-white text-opacity-50 text-sm">Loading visual inspiration...</div>
+          </div>
+        )}
+        
         {/* Large moving blobs */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
         <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
