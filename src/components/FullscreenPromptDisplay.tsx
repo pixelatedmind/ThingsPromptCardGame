@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Copy, Share2, Sparkles } from 'lucide-react';
+import { X, Copy, Sparkles } from 'lucide-react';
 
 interface FullscreenPromptDisplayProps {
   currentWords: {
@@ -72,11 +72,21 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
       aria-modal="true"
       aria-labelledby="prompt-title"
     >
-      {/* Animated background elements */}
+      {/* Animated glowing blobs */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow"></div>
-        <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-1/4 left-1/2 w-64 h-64 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        {/* Large moving blobs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
+        <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/4 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-35 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        
+        {/* Additional floating blobs */}
+        <div className="absolute top-1/2 left-1/6 w-48 h-48 bg-cyan-400 rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-pulse-slow" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-1/3 right-1/6 w-56 h-56 bg-indigo-400 rounded-full mix-blend-multiply filter blur-2xl opacity-25 animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/6 right-1/3 w-40 h-40 bg-violet-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse-slow" style={{ animationDelay: '2.5s' }}></div>
+        
+        {/* Small accent blobs */}
+        <div className="absolute top-2/3 left-1/3 w-32 h-32 bg-teal-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute bottom-1/6 left-2/3 w-36 h-36 bg-rose-400 rounded-full mix-blend-multiply filter blur-xl opacity-25 animate-pulse-slow" style={{ animationDelay: '3.5s' }}></div>
       </div>
 
       {/* Close button */}
@@ -108,61 +118,53 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
         </h1>
 
         {/* Prompt text with staggered animations */}
-        <div className="text-2xl md:text-4xl lg:text-5xl font-light text-white leading-relaxed mb-16 space-y-4">
+        <div className="text-2xl md:text-4xl lg:text-5xl font-light leading-relaxed mb-16 space-y-4">
           <div className={`${animationPhase >= 2 ? 'animate-slide-in-left' : 'opacity-0'}`}>
-            <span className="text-gray-300">In a </span>
-            <span className="font-bold text-blue-300 bg-blue-900 bg-opacity-30 px-4 py-2 rounded-lg">
+            <span className="text-white drop-shadow-lg">In a </span>
+            <span className="font-bold text-blue-100 bg-blue-600 bg-opacity-80 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm border border-blue-400 border-opacity-30">
               {currentWords.future}
             </span>
-            <span className="text-gray-300"> future,</span>
+            <span className="text-white drop-shadow-lg"> future,</span>
           </div>
           
           <div className={`${animationPhase >= 3 ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
-            <span className="text-gray-300">there is a </span>
-            <span className="font-bold text-green-300 bg-green-900 bg-opacity-30 px-4 py-2 rounded-lg">
+            <span className="text-white drop-shadow-lg">there is a </span>
+            <span className="font-bold text-green-100 bg-green-600 bg-opacity-80 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm border border-green-400 border-opacity-30">
               {currentWords.thing}
             </span>
           </div>
           
           <div className={`${animationPhase >= 4 ? 'animate-slide-in-right' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
-            <span className="text-gray-300">related to </span>
-            <span className="font-bold text-purple-300 bg-purple-900 bg-opacity-30 px-4 py-2 rounded-lg">
+            <span className="text-white drop-shadow-lg">related to </span>
+            <span className="font-bold text-purple-100 bg-purple-600 bg-opacity-80 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm border border-purple-400 border-opacity-30">
               {currentWords.theme}
             </span>
-            <span className="text-gray-300">.</span>
+            <span className="text-white drop-shadow-lg">.</span>
           </div>
         </div>
 
         {/* Action buttons */}
-        <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center ${
+        <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${
           animationPhase >= 4 ? 'animate-fade-in-up' : 'opacity-0'
         }`} style={{ animationDelay: '0.6s' }}>
           <button
             onClick={handleCopy}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-3 backdrop-blur-sm border border-white border-opacity-20 hover:border-opacity-40 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transform hover:scale-105"
+            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-10 py-4 rounded-lg font-medium transition-all duration-300 flex items-center gap-3 backdrop-blur-sm border border-white border-opacity-30 hover:border-opacity-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             <Copy className="w-5 h-5" />
             Copy Prompt
           </button>
           
           <button
-            onClick={handleShare}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-3 rounded-lg font-medium transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
-          >
-            <Share2 className="w-5 h-5" />
-            Share Prompt
-          </button>
-          
-          <button
             onClick={onClose}
-            className="text-white hover:text-gray-300 px-6 py-3 rounded-lg font-medium transition-all duration-300 border border-white border-opacity-30 hover:border-opacity-50 hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"
+            className="text-white hover:text-gray-200 px-10 py-4 rounded-lg font-medium transition-all duration-300 border border-white border-opacity-40 hover:border-opacity-60 hover:bg-white hover:bg-opacity-15 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 backdrop-blur-sm shadow-lg hover:shadow-xl transform hover:scale-105"
           >
             Continue Writing
           </button>
         </div>
 
         {/* Subtle instruction text */}
-        <p className={`text-gray-400 text-sm mt-8 ${
+        <p className={`text-white text-opacity-70 text-sm mt-8 drop-shadow ${
           animationPhase >= 4 ? 'animate-fade-in' : 'opacity-0'
         }`} style={{ animationDelay: '1s' }}>
           Press ESC to close or click Continue Writing to return to the generator
