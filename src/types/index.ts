@@ -21,8 +21,4 @@ export interface AppState {
   };
   history: GeneratedCombination[];
   isGenerating: boolean;
-  promptImageUrl: string | null;
-  isImageLoading: boolean;
-  backgroundImageUrl: string | null;
-  isBackgroundLoading: boolean;
 }

@@ -14,10 +14,6 @@ function App() {
     currentWords,
     history,
     isGenerating,
-    promptImageUrl,
-    isImageLoading,
-    backgroundImageUrl,
-    isBackgroundLoading,
     generateWord,
     generateAllWords,
     clearHistory,
@@ -52,40 +48,27 @@ function App() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Image */}
-      {backgroundImageUrl && !isBackgroundLoading && (
-        <div className="absolute inset-0 z-0">
-          <img
-            src={backgroundImageUrl}
-            alt="Background inspiration"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              console.log('Background image failed to load:', backgroundImageUrl);
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-indigo-50/85 to-purple-50/90"></div>
-        </div>
-      )}
+      {/* Animated CSS Blobs Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        {/* Large moving blobs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
+        <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-1/4 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-35 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        
+        {/* Medium floating blobs */}
+        <div className="absolute top-1/2 left-1/6 w-48 h-48 bg-cyan-400 rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-pulse-slow" style={{ animationDelay: '0.5s' }}></div>
+        <div className="absolute bottom-1/3 right-1/6 w-56 h-56 bg-indigo-400 rounded-full mix-blend-multiply filter blur-2xl opacity-25 animate-pulse-slow" style={{ animationDelay: '1.5s' }}></div>
+        <div className="absolute top-1/6 right-1/3 w-40 h-40 bg-violet-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse-slow" style={{ animationDelay: '2.5s' }}></div>
+        
+        {/* Small accent blobs */}
+        <div className="absolute top-2/3 left-1/3 w-32 h-32 bg-teal-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" style={{ animationDelay: '3s' }}></div>
+        <div className="absolute bottom-1/6 left-2/3 w-36 h-36 bg-rose-400 rounded-full mix-blend-multiply filter blur-xl opacity-25 animate-pulse-slow" style={{ animationDelay: '3.5s' }}></div>
+      </div>
       
-      {/* Fallback gradient background */}
-      {(!backgroundImageUrl || isBackgroundLoading) && (
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"></div>
-      )}
-      
-      {/* Loading indicator for background */}
-      {isBackgroundLoading && (
-        <div className="absolute top-4 right-4 z-10">
-          <div className="text-gray-600 text-sm bg-white bg-opacity-80 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm">
-            Loading background...
-          </div>
-        </div>
-      )}
-      
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
+      <div className="container mx-auto px-4 py-12 max-w-6xl relative z-10">
         <Header />
         
-        <main className="relative z-10">
+        <main>
           {/* Word Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {Object.entries(wordCategories).map(([key, category]) => (
@@ -150,12 +133,11 @@ function App() {
         {showFullscreenPrompt && (
           <FullscreenPromptDisplay
             currentWords={currentWords}
-            promptImageUrl={promptImageUrl}
-            isImageLoading={isImageLoading}
             onClose={handleCloseFullscreenPrompt}
           />
         )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -13,11 +13,7 @@ export const useWordGenerator = () => {
       theme: '[THEME WORD]'
     },
     history: [],
-    isGenerating: false,
-    promptImageUrl: null,
-    isImageLoading: false,
-    backgroundImageUrl: null,
-    isBackgroundLoading: false
+    isGenerating: false
   });
 
   // Load history from localStorage on mount
@@ -44,149 +40,6 @@ export const useWordGenerator = () => {
       console.warn('Failed to save history to localStorage:', error);
     }
   }, [state.history]);
-
-  const fetchBackgroundImage = useCallback(async () => {
-    const apiKey = import.meta.env.VITE_PEXELS_API_KEY;
-    if (!apiKey) {
-      console.warn('Pexels API key not found in environment variables');
-      return;
-    }
-
-    console.log('Fetching background image for main page');
-    setState(prev => ({ ...prev, isBackgroundLoading: true }));
-
-    try {
-      const queries = [
-        'futuristic technology abstract',
-        'sci-fi digital art',
-        'space technology future',
-        'abstract digital background',
-        'cyberpunk neon lights',
-        'futuristic city skyline'
-      ];
-      
-      const randomQuery = queries[Math.floor(Math.random() * queries.length)];
-      
-      const response = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(randomQuery)}&per_page=20&orientation=landscape&size=large`,
-        {
-          headers: {
-            'Authorization': apiKey.trim()
-          }
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Pexels API response not ok:', response.status, response.statusText, errorText);
-        
-        // Don't throw error for API failures, just log and continue
-        setState(prev => ({
-          ...prev,
-          backgroundImageUrl: null,
-          isBackgroundLoading: false
-        }));
-        return;
-      }
-
-      const data = await response.json();
-      
-      if (data.photos && data.photos.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.photos.length);
-        const selectedPhoto = data.photos[randomIndex];
-        console.log('Selected background photo:', selectedPhoto.src.large2x);
-        
-        setState(prev => ({
-          ...prev,
-          backgroundImageUrl: selectedPhoto.src.large2x,
-          isBackgroundLoading: false
-        }));
-      } else {
-        console.log('No background photos found for query:', randomQuery);
-        setState(prev => ({
-          ...prev,
-          backgroundImageUrl: null,
-          isBackgroundLoading: false
-        }));
-      }
-    } catch (error) {
-      console.error('Failed to fetch background image from Pexels:', error);
-      setState(prev => ({
-        ...prev,
-        backgroundImageUrl: null,
-        isBackgroundLoading: false
-      }));
-    }
-  }, []);
-
-  // Fetch background image on mount
-  useEffect(() => {
-    fetchBackgroundImage();
-  }, [fetchBackgroundImage]);
-
-  const fetchPromptImage = useCallback(async (searchQuery: string) => {
-    const apiKey = import.meta.env.VITE_PEXELS_API_KEY;
-    if (!apiKey) {
-      console.warn('Pexels API key not found in environment variables');
-      return;
-    }
-
-    console.log('Fetching image for query:', searchQuery);
-    setState(prev => ({ ...prev, isImageLoading: true }));
-
-    try {
-      const response = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=20&orientation=landscape&size=large`,
-        {
-          headers: {
-            'Authorization': apiKey.trim()
-          }
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Pexels API response not ok:', response.status, response.statusText, errorText);
-        
-        // Don't throw error for API failures, just log and continue
-        setState(prev => ({
-          ...prev,
-          promptImageUrl: null,
-          isImageLoading: false
-        }));
-        return;
-      }
-
-      const data = await response.json();
-      
-      if (data.photos && data.photos.length > 0) {
-        // Get a random image from the results
-        const randomIndex = Math.floor(Math.random() * data.photos.length);
-        const selectedPhoto = data.photos[randomIndex];
-        console.log('Selected photo:', selectedPhoto.src.large2x);
-        
-        setState(prev => ({
-          ...prev,
-          promptImageUrl: selectedPhoto.src.large2x,
-          isImageLoading: false
-        }));
-      } else {
-        console.log('No photos found for query:', searchQuery);
-        setState(prev => ({
-          ...prev,
-          promptImageUrl: null,
-          isImageLoading: false
-        }));
-      }
-    } catch (error) {
-      console.error('Failed to fetch image from Pexels:', error);
-      setState(prev => ({
-        ...prev,
-        promptImageUrl: null,
-        isImageLoading: false
-      }));
-    }
-  }, []);
 
   const getRandomWord = useCallback((category: keyof typeof wordCategories): string => {
     const words = wordCategories[category].words;
@@ -229,17 +82,13 @@ export const useWordGenerator = () => {
       timestamp: new Date()
     };
 
-    // Fetch a relevant image based on the generated words
-    const imageSearchQuery = `${newWords.future} ${newWords.thing} ${newWords.theme} futuristic sci-fi`;
-    fetchPromptImage(imageSearchQuery);
-
     setState(prev => ({
       ...prev,
       currentWords: newWords,
       history: [newCombination, ...prev.history].slice(0, MAX_HISTORY_ITEMS),
       isGenerating: false
     }));
-  }, [getRandomWord, fetchPromptImage]);
+  }, [getRandomWord]);
 
   const clearHistory = useCallback(() => {
     setState(prev => ({ ...prev, history: [] }));
