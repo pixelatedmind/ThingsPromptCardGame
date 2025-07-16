@@ -3,12 +3,12 @@ import { Shuffle, Download } from 'lucide-react';
 import { Header } from './components/Header';
 import { WordCard } from './components/WordCard';
 import { HistoryPanel } from './components/HistoryPanel';
-import { FullscreenPromptDisplay } from './components/FullscreenPromptDisplay';
+import { IntegratedPromptPreview } from './components/IntegratedPromptPreview';
 import { useWordGenerator } from './hooks/useWordGenerator';
 import { wordCategories } from './data/wordCategories';
 
 function App() {
-  const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+  const [showPromptPreview, setShowPromptPreview] = useState(false);
   
   const {
     currentWords,
@@ -22,14 +22,10 @@ function App() {
 
   const handleGenerateAllWords = async () => {
     await generateAllWords();
-    // Show fullscreen display after generation is complete
-    setTimeout(() => {
-      setShowFullscreenPrompt(true);
-    }, 100);
-  };
-
-  const handleCloseFullscreenPrompt = () => {
-    setShowFullscreenPrompt(false);
+    // Show integrated preview after generation is complete
+  const handleGenerateAllWords = () => {
+    generateAllWords();
+    setShowPromptPreview(true);
   };
 
   const handleCopyWord = (word: string) => {
@@ -37,6 +33,15 @@ function App() {
       // Could show a toast notification here
       console.log('Word copied to clipboard');
     });
+  };
+
+  const handleCopyPrompt = () => {
+    setCopyFeedback(true);
+    setTimeout(() => setCopyFeedback(false), 2000);
+  };
+
+  const handleTogglePreviewVisibility = () => {
+    setShowPromptPreview(!showPromptPreview);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent, action: () => void) => {
@@ -67,6 +72,16 @@ function App() {
       
       <div className="container mx-auto px-4 py-12 max-w-6xl relative z-10">
         <Header />
+        
+        {/* Integrated Prompt Preview - Top Position */}
+        <IntegratedPromptPreview
+          currentWords={currentWords}
+          isVisible={showPromptPreview}
+          isGenerating={isGenerating}
+          onCopy={handleCopyPrompt}
+          onRegenerate={handleGenerateAllWords}
+          onToggleVisibility={handleTogglePreviewVisibility}
+        />
         
         <main>
           {/* Word Cards */}
@@ -106,20 +121,6 @@ function App() {
               Export Current
             </button>
           </div>
-
-          {/* Current Combination Display */}
-          {!currentWords.future.includes('[') && (
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8 max-w-3xl mx-auto">
-              <h2 className="text-lg font-semibold text-gray-900 mb-3 text-center">
-                Your Writing Prompt:
-              </h2>
-              <p className="text-xl text-gray-800 text-center leading-relaxed">
-                In a <span className="font-bold text-indigo-600">{currentWords.future}</span> future, 
-                there is a <span className="font-bold text-green-600">{currentWords.thing}</span> related 
-                to <span className="font-bold text-purple-600">{currentWords.theme}</span>.
-              </p>
-            </div>
-          )}
         </main>
 
         {/* History Panel */}
@@ -128,14 +129,6 @@ function App() {
           onClearHistory={clearHistory}
           onExport={exportCombination}
         />
-
-        {/* Fullscreen Prompt Display */}
-        {showFullscreenPrompt && (
-          <FullscreenPromptDisplay
-            currentWords={currentWords}
-            onClose={handleCloseFullscreenPrompt}
-          />
-        )}
       </div>
     </div>
   );
