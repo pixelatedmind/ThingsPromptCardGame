@@ -19,25 +19,25 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
   onClose
 }) => {
   const [showContent, setShowContent] = useState(false);
-  const [animationPhase, setAnimationPhase] = useState(0);
+  const [titleVisible, setTitleVisible] = useState(false);
+  const [futureVisible, setFutureVisible] = useState(false);
+  const [thingVisible, setThingVisible] = useState(false);
+  const [themeVisible, setThemeVisible] = useState(false);
+  const [buttonsVisible, setButtonsVisible] = useState(false);
 
   useEffect(() => {
-    // Trigger content animation after component mounts
-    const timer = setTimeout(() => {
-      setShowContent(true);
-    }, 100);
-
-    // Stagger the animation phases
-    const phaseTimers = [
-      setTimeout(() => setAnimationPhase(1), 300),
-      setTimeout(() => setAnimationPhase(2), 600),
-      setTimeout(() => setAnimationPhase(3), 900),
-      setTimeout(() => setAnimationPhase(4), 1200),
+    // Stagger the animations with proper timing
+    const timers = [
+      setTimeout(() => setShowContent(true), 100),
+      setTimeout(() => setTitleVisible(true), 400),
+      setTimeout(() => setFutureVisible(true), 800),
+      setTimeout(() => setThingVisible(true), 1200),
+      setTimeout(() => setThemeVisible(true), 1600),
+      setTimeout(() => setButtonsVisible(true), 2000),
     ];
 
     return () => {
-      clearTimeout(timer);
-      phaseTimers.forEach(clearTimeout);
+      timers.forEach(clearTimeout);
     };
   }, []);
 
@@ -84,13 +84,13 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
             <img
               src={promptImageUrl}
               alt="Prompt inspiration"
-              className="w-full h-full object-cover opacity-30"
+              className="w-full h-full object-cover opacity-40"
               onError={(e) => {
                 console.log('Image failed to load:', promptImageUrl);
                 e.currentTarget.style.display = 'none';
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-purple-900/75 to-pink-900/80"></div>
           </div>
         )}
         
@@ -132,40 +132,40 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
       {/* Main content */}
       <div className="text-center max-w-4xl mx-auto relative">
         {/* Sparkles decoration */}
-        <div className={`absolute -top-8 left-1/2 transform -translate-x-1/2 ${animationPhase >= 1 ? 'animate-scale-in' : 'opacity-0'}`}>
+        <div className={`absolute -top-12 left-1/2 transform -translate-x-1/2 transition-all duration-1000 ${titleVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
           <Sparkles className="w-12 h-12 text-yellow-400" />
         </div>
 
         {/* Title */}
         <h1 
           id="prompt-title"
-          className={`text-4xl md:text-6xl font-bold text-white mb-12 ${
-            animationPhase >= 1 ? 'animate-fade-in-up' : 'opacity-0'
+          className={`text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-16 transition-all duration-1000 ${
+            titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
           Your Writing Prompt
         </h1>
 
         {/* Prompt text with staggered animations */}
-        <div className="text-2xl md:text-4xl lg:text-5xl font-light leading-relaxed mb-16 space-y-4">
-          <div className={`${animationPhase >= 2 ? 'animate-slide-in-left' : 'opacity-0'}`}>
+        <div className="text-2xl md:text-4xl lg:text-5xl font-light leading-relaxed mb-20 space-y-6">
+          <div className={`transition-all duration-1000 ${futureVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
             <span className="text-white drop-shadow-lg">In a </span>
-            <span className="font-bold text-blue-100 bg-blue-600 bg-opacity-80 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm border border-blue-400 border-opacity-30">
+            <span className="font-bold text-blue-100 bg-blue-600 bg-opacity-90 px-6 py-3 rounded-xl shadow-2xl backdrop-blur-sm border border-blue-400 border-opacity-40 transform hover:scale-105 transition-transform duration-300">
               {currentWords.future}
             </span>
             <span className="text-white drop-shadow-lg"> future,</span>
           </div>
           
-          <div className={`${animationPhase >= 3 ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+          <div className={`transition-all duration-1000 delay-200 ${thingVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <span className="text-white drop-shadow-lg">there is a </span>
-            <span className="font-bold text-green-100 bg-green-600 bg-opacity-80 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm border border-green-400 border-opacity-30">
+            <span className="font-bold text-green-100 bg-green-600 bg-opacity-90 px-6 py-3 rounded-xl shadow-2xl backdrop-blur-sm border border-green-400 border-opacity-40 transform hover:scale-105 transition-transform duration-300">
               {currentWords.thing}
             </span>
           </div>
           
-          <div className={`${animationPhase >= 4 ? 'animate-slide-in-right' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
+          <div className={`transition-all duration-1000 delay-400 ${themeVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
             <span className="text-white drop-shadow-lg">related to </span>
-            <span className="font-bold text-purple-100 bg-purple-600 bg-opacity-80 px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm border border-purple-400 border-opacity-30">
+            <span className="font-bold text-purple-100 bg-purple-600 bg-opacity-90 px-6 py-3 rounded-xl shadow-2xl backdrop-blur-sm border border-purple-400 border-opacity-40 transform hover:scale-105 transition-transform duration-300">
               {currentWords.theme}
             </span>
             <span className="text-white drop-shadow-lg">.</span>
@@ -173,12 +173,12 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
         </div>
 
         {/* Action buttons */}
-        <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${
-          animationPhase >= 4 ? 'animate-fade-in-up' : 'opacity-0'
-        }`} style={{ animationDelay: '0.6s' }}>
+        <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-1000 delay-600 ${
+          buttonsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
           <button
             onClick={handleCopy}
-            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-10 py-4 rounded-lg font-medium transition-all duration-300 flex items-center gap-3 backdrop-blur-sm border border-white border-opacity-30 hover:border-opacity-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-12 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 backdrop-blur-sm border border-white border-opacity-30 hover:border-opacity-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 transform hover:scale-105 shadow-2xl hover:shadow-3xl"
           >
             <Copy className="w-5 h-5" />
             Copy Prompt
@@ -186,16 +186,16 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
           
           <button
             onClick={onClose}
-            className="text-white hover:text-gray-200 px-10 py-4 rounded-lg font-medium transition-all duration-300 border border-white border-opacity-40 hover:border-opacity-60 hover:bg-white hover:bg-opacity-15 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 backdrop-blur-sm shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="text-white hover:text-gray-200 px-12 py-4 rounded-xl font-semibold transition-all duration-300 border border-white border-opacity-40 hover:border-opacity-60 hover:bg-white hover:bg-opacity-15 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 backdrop-blur-sm shadow-2xl hover:shadow-3xl transform hover:scale-105"
           >
             Continue Writing
           </button>
         </div>
 
         {/* Subtle instruction text */}
-        <p className={`text-white text-opacity-70 text-sm mt-8 drop-shadow ${
-          animationPhase >= 4 ? 'animate-fade-in' : 'opacity-0'
-        }`} style={{ animationDelay: '1s' }}>
+        <p className={`text-white text-opacity-70 text-base mt-10 drop-shadow transition-all duration-1000 delay-1000 ${
+          buttonsVisible ? 'opacity-100' : 'opacity-0'
+        }`}>
           Press ESC to close or click Continue Writing to return to the generator
         </p>
       </div>

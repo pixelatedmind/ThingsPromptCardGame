@@ -23,4 +23,6 @@ export interface AppState {
   isGenerating: boolean;
   promptImageUrl: string | null;
   isImageLoading: boolean;
+  backgroundImageUrl: string | null;
+  isBackgroundLoading: boolean;
 }

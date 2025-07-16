@@ -16,6 +16,8 @@ function App() {
     isGenerating,
     promptImageUrl,
     isImageLoading,
+    backgroundImageUrl,
+    isBackgroundLoading,
     generateWord,
     generateAllWords,
     clearHistory,
@@ -49,11 +51,41 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Image */}
+      {backgroundImageUrl && !isBackgroundLoading && (
+        <div className="absolute inset-0 z-0">
+          <img
+            src={backgroundImageUrl}
+            alt="Background inspiration"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              console.log('Background image failed to load:', backgroundImageUrl);
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/90 via-indigo-50/85 to-purple-50/90"></div>
+        </div>
+      )}
+      
+      {/* Fallback gradient background */}
+      {(!backgroundImageUrl || isBackgroundLoading) && (
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"></div>
+      )}
+      
+      {/* Loading indicator for background */}
+      {isBackgroundLoading && (
+        <div className="absolute top-4 right-4 z-10">
+          <div className="text-gray-600 text-sm bg-white bg-opacity-80 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm">
+            Loading background...
+          </div>
+        </div>
+      )}
+      
       <div className="container mx-auto px-4 py-12 max-w-6xl">
         <Header />
         
-        <main>
+        <main className="relative z-10">
           {/* Word Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {Object.entries(wordCategories).map(([key, category]) => (
