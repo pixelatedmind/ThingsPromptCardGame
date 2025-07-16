@@ -46,15 +46,16 @@ export const useWordGenerator = () => {
   const fetchPromptImage = useCallback(async (searchQuery: string) => {
     const apiKey = import.meta.env.VITE_PEXELS_API_KEY;
     if (!apiKey) {
-      console.warn('Pexels API key not found');
+      console.warn('Pexels API key not found in environment variables');
       return;
     }
 
+    console.log('Fetching image for query:', searchQuery);
     setState(prev => ({ ...prev, isImageLoading: true }));
 
     try {
       const response = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=15&orientation=landscape`,
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=20&orientation=landscape&size=large`,
         {
           headers: {
             'Authorization': apiKey
@@ -63,6 +64,7 @@ export const useWordGenerator = () => {
       );
 
       if (!response.ok) {
+        console.error('Pexels API response not ok:', response.status, response.statusText);
         throw new Error(`Pexels API error: ${response.status}`);
       }
 
@@ -72,6 +74,7 @@ export const useWordGenerator = () => {
         // Get a random image from the results
         const randomIndex = Math.floor(Math.random() * data.photos.length);
         const selectedPhoto = data.photos[randomIndex];
+        console.log('Selected photo:', selectedPhoto.src.large2x);
         
         setState(prev => ({
           ...prev,
@@ -79,6 +82,7 @@ export const useWordGenerator = () => {
           isImageLoading: false
         }));
       } else {
+        console.log('No photos found for query:', searchQuery);
         setState(prev => ({
           ...prev,
           promptImageUrl: null,

@@ -79,21 +79,27 @@ export const FullscreenPromptDisplay: React.FC<FullscreenPromptDisplayProps> = (
       {/* Animated glowing blobs */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Background image with overlay */}
-        {promptImageUrl && (
+        {promptImageUrl && !isImageLoading && (
           <div className="absolute inset-0">
             <img
               src={promptImageUrl}
               alt="Prompt inspiration"
-              className="w-full h-full object-cover opacity-20"
+              className="w-full h-full object-cover opacity-30"
+              onError={(e) => {
+                console.log('Image failed to load:', promptImageUrl);
+                e.currentTarget.style.display = 'none';
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 opacity-80"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 opacity-70"></div>
           </div>
         )}
         
         {/* Loading state for image */}
         {isImageLoading && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-white text-opacity-50 text-sm">Loading visual inspiration...</div>
+          <div className="absolute top-4 left-4 z-10">
+            <div className="text-white text-opacity-70 text-sm bg-black bg-opacity-30 px-3 py-1 rounded-full backdrop-blur-sm">
+              Loading visual inspiration...
+            </div>
           </div>
         )}
         

@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
           <Sparkles className="w-4 h-4 text-yellow-400 absolute -top-1 -right-1 animate-pulse" />
         </div>
         <h1 className="text-4xl font-bold text-gray-900">
-          Creative Writing Prompt Generator
+          Things Prompt Card Game
         </h1>
       </div>
       <p className="text-lg text-gray-600 max-w-2xl mx-auto">
