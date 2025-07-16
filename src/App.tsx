@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Shuffle, Download } from 'lucide-react';
 import { Header } from './components/Header';
 import { WordCard } from './components/WordCard';
 import { HistoryPanel } from './components/HistoryPanel';
+import { FullscreenPromptDisplay } from './components/FullscreenPromptDisplay';
 import { useWordGenerator } from './hooks/useWordGenerator';
 import { wordCategories } from './data/wordCategories';
 
 function App() {
+  const [showFullscreenPrompt, setShowFullscreenPrompt] = useState(false);
+  
   const {
     currentWords,
     history,
@@ -16,6 +19,18 @@ function App() {
     clearHistory,
     exportCombination
   } = useWordGenerator();
+
+  const handleGenerateAllWords = async () => {
+    await generateAllWords();
+    // Show fullscreen display after generation is complete
+    setTimeout(() => {
+      setShowFullscreenPrompt(true);
+    }, 100);
+  };
+
+  const handleCloseFullscreenPrompt = () => {
+    setShowFullscreenPrompt(false);
+  };
 
   const handleCopyWord = (word: string) => {
     navigator.clipboard.writeText(word).then(() => {
@@ -54,14 +69,14 @@ function App() {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <button
-              onClick={generateAllWords}
-              onKeyDown={(e) => handleKeyDown(e, generateAllWords)}
+              onClick={handleGenerateAllWords}
+              onKeyDown={(e) => handleKeyDown(e, handleGenerateAllWords)}
               disabled={isGenerating}
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-indigo-400 disabled:to-purple-400 text-white px-8 py-3 rounded-lg font-semibold text-lg transition-all duration-200 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               aria-label="Generate new random word combination"
             >
               <Shuffle className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
-              Generate Random Set
+              Generate & Present
             </button>
             
             <button
@@ -96,6 +111,14 @@ function App() {
           onClearHistory={clearHistory}
           onExport={exportCombination}
         />
+
+        {/* Fullscreen Prompt Display */}
+        {showFullscreenPrompt && (
+          <FullscreenPromptDisplay
+            currentWords={currentWords}
+            onClose={handleCloseFullscreenPrompt}
+          />
+        )}
       </div>
     </div>
   );
