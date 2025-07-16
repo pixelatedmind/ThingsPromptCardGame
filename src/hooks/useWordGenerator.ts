@@ -71,14 +71,22 @@ export const useWordGenerator = () => {
         `https://api.pexels.com/v1/search?query=${encodeURIComponent(randomQuery)}&per_page=20&orientation=landscape&size=large`,
         {
           headers: {
-            'Authorization': apiKey
+            'Authorization': apiKey.trim()
           }
         }
       );
 
       if (!response.ok) {
-        console.error('Pexels API response not ok:', response.status, response.statusText);
-        throw new Error(`Pexels API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Pexels API response not ok:', response.status, response.statusText, errorText);
+        
+        // Don't throw error for API failures, just log and continue
+        setState(prev => ({
+          ...prev,
+          backgroundImageUrl: null,
+          isBackgroundLoading: false
+        }));
+        return;
       }
 
       const data = await response.json();
@@ -131,14 +139,22 @@ export const useWordGenerator = () => {
         `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=20&orientation=landscape&size=large`,
         {
           headers: {
-            'Authorization': apiKey
+            'Authorization': apiKey.trim()
           }
         }
       );
 
       if (!response.ok) {
-        console.error('Pexels API response not ok:', response.status, response.statusText);
-        throw new Error(`Pexels API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Pexels API response not ok:', response.status, response.statusText, errorText);
+        
+        // Don't throw error for API failures, just log and continue
+        setState(prev => ({
+          ...prev,
+          promptImageUrl: null,
+          isImageLoading: false
+        }));
+        return;
       }
 
       const data = await response.json();
