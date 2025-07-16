@@ -136,8 +136,7 @@ function App() {
             onClose={handleCloseFullscreenPrompt}
           />
         )}
-        </div>
-      )}
+      </div>
     </div>
   );
 }
