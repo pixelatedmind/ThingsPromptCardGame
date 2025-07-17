@@ -238,7 +238,9 @@ function App() {
                         </div>
                       </div>
                     </div>
+                </div>
 
+                {hasValidWords ? (
                   <>
                     {/* Prompt Content */}
                     <div className="flex-1 flex items-center justify-center">
