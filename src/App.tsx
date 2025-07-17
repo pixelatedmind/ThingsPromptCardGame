@@ -174,12 +174,6 @@ function App() {
             </div>
           </div>
           
-          <div className="max-w-3xl mx-auto space-y-3 mb-6">
-            <p className="text-lg text-slate-700 font-medium">
-              Generate unique science fiction writing prompts to spark your creativity
-            </p>
-          </div>
-          
           <div className="flex justify-center">
             <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
           </div>
