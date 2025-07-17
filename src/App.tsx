@@ -263,16 +263,47 @@ function App() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 flex items-center justify-center">
-                    <button
-                      onClick={generateAllWords}
-                      disabled={isGenerating}
-                      className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
-                      Generate New
-                    </button>
-                  </div>
+                  <>
+                    {/* Prompt Content with Empty Placeholders */}
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="text-center text-xl lg:text-2xl xl:text-3xl leading-relaxed space-y-4 max-w-4xl">
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                          <span className="text-slate-700">In a</span>
+                          <span className="inline-flex items-center bg-slate-200 text-slate-500 px-4 py-2 rounded-xl font-bold shadow-sm">
+                            [ENERGY FUTURE]
+                          </span>
+                          <span className="text-slate-700">energy future,</span>
+                        </div>
+                        
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                          <span className="text-slate-700">there is a</span>
+                          <span className="inline-flex items-center bg-slate-200 text-slate-500 px-4 py-2 rounded-xl font-bold shadow-sm">
+                            [SOLUTION]
+                          </span>
+                        </div>
+                        
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                          <span className="text-slate-700">related to</span>
+                          <span className="inline-flex items-center bg-slate-200 text-slate-500 px-4 py-2 rounded-xl font-bold shadow-sm">
+                            [FOCUS AREA]
+                          </span>
+                          <span className="text-slate-700">.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+                      <button
+                        onClick={generateAllWords}
+                        disabled={isGenerating}
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
+                        Generate New
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
