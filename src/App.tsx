@@ -20,10 +20,6 @@ function App() {
     exportCombination
   } = useWordGenerator();
 
-  const handleGenerateAllWords = async () => {
-    await generateAllWords();
-    // Show integrated preview after generation is complete
-  };
   const handleGenerateAllWords = () => {
     generateAllWords();
     setShowPromptPreview(true);
