@@ -128,47 +128,19 @@ function App() {
   // Loading Screen
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50 flex items-center justify-center">
-        <div className="text-center space-y-8 max-w-md mx-auto px-6">
-          {/* Animated Logo */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="relative">
           <div className="relative">
-            <div className="flex items-center justify-center space-x-4 mb-6">
-              <div className="relative">
-                <Sun className="w-16 h-16 text-yellow-500 animate-spin" style={{ animationDuration: '3s' }} />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Zap className="w-8 h-8 text-yellow-600 animate-pulse" />
-                </div>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Home className="w-12 h-12 text-green-600 animate-bounce" style={{ animationDelay: '0.5s' }} />
-                <Leaf className="w-10 h-10 text-emerald-500 animate-bounce" style={{ animationDelay: '1s' }} />
-              </div>
-            </div>
-            
-            {/* Pulsing rings */}
+            <Sun className="w-16 h-16 text-yellow-500 animate-spin" style={{ animationDuration: '3s' }} />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-32 border-2 border-green-200 rounded-full animate-ping opacity-20"></div>
-              <div className="absolute w-24 h-24 border-2 border-blue-200 rounded-full animate-ping opacity-30" style={{ animationDelay: '0.5s' }}></div>
+              <Zap className="w-8 h-8 text-yellow-600 animate-pulse" />
             </div>
           </div>
-
-          {/* Loading Text */}
-          <div className="space-y-4">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              Clean Energy Solutions
-            </h1>
-            <p className="text-lg text-slate-600">
-              Powering sustainable innovation
-            </p>
-            
-            {/* Loading bar */}
-            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full animate-pulse"></div>
-            </div>
-            
-            <p className="text-sm text-slate-500 animate-pulse">
-              Initializing clean energy prompt generator...
-            </p>
+          
+          {/* Pulsing rings */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-32 h-32 border-2 border-green-200 rounded-full animate-ping opacity-20"></div>
+            <div className="absolute w-24 h-24 border-2 border-blue-200 rounded-full animate-ping opacity-30" style={{ animationDelay: '0.5s' }}></div>
           </div>
         </div>
       </div>
