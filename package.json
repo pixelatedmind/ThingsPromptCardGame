@@ -2,7 +2,7 @@
   "name": "vite-react-typescript-starter",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://YOUR_USERNAME.github.io/ThingsPromptCardGame/",
+  "homepage": "https://pixelatedmind.github.io/ThingsPromptCardGame/",
   "type": "module",
   "scripts": {
     "dev": "vite",
