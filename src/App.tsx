@@ -58,7 +58,7 @@ function App() {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
-  const [showPastPrompts, setShowPastPrompts] = useState(false);
+  const [showPastPrompts, setShowPastPrompts] = useState(true);
   const [pastPrompts, setPastPrompts] = useState<Array<{
     id: string;
     future: string;
@@ -254,11 +254,11 @@ function App() {
                       </button>
                       
                       <button
-                        onClick={() => setShowPastPrompts(true)}
+                        onClick={() => setShowPastPrompts(!showPastPrompts)}
                         className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                       >
                         <History className="w-5 h-5" />
-                        Past Prompts
+                        {showPastPrompts ? 'Hide History' : 'Past Prompts'}
                       </button>
                     </div>
                   </>
@@ -304,11 +304,11 @@ function App() {
                       </button>
                       
                       <button
-                        onClick={() => setShowPastPrompts(true)}
+                        onClick={() => setShowPastPrompts(!showPastPrompts)}
                         className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                       >
                         <History className="w-5 h-5" />
-                        Past Prompts
+                        {showPastPrompts ? 'Hide History' : 'Past Prompts'}
                       </button>
                     </div>
                   </>
@@ -317,72 +317,66 @@ function App() {
             </div>
           </div>
 
-        </div>
-        
-        {/* Past Prompts Modal */}
-        {showPastPrompts && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
-              {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-slate-200">
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                  <History className="w-6 h-6 text-indigo-600" />
-                  Past Prompts
-                </h2>
-                <button
-                  onClick={() => setShowPastPrompts(false)}
-                  className="p-2 hover:bg-slate-100 rounded-xl transition-colors"
-                >
-                  <X className="w-5 h-5 text-slate-500" />
-                </button>
-              </div>
-              
-              {/* Modal Content */}
-              <div className="p-6 overflow-y-auto max-h-[60vh]">
-                {pastPrompts.length === 0 ? (
-                  <div className="text-center py-12">
-                    <History className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-slate-600 mb-2">No Past Prompts Yet</h3>
-                    <p className="text-slate-500">Generate some prompts to see your history here!</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {pastPrompts.map((prompt) => (
-                      <div key={prompt.id} className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer"
-                           onClick={() => {
-                             setCurrentWords({
-                               future: prompt.future,
-                               thing: prompt.thing,
-                               theme: prompt.theme
-                             });
-                             setShowPastPrompts(false);
-                           }}>
-                        <div className="text-lg leading-relaxed mb-2">
-                          <span className="text-slate-700">In a </span>
-                          <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-lg font-semibold">
-                            {prompt.future}
-                          </span>
-                          <span className="text-slate-700"> energy future, there is a </span>
-                          <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-lg font-semibold">
-                            {prompt.thing}
-                          </span>
-                          <span className="text-slate-700"> related to </span>
-                          <span className="bg-gradient-to-r from-purple-500 to-violet-500 text-white px-3 py-1 rounded-lg font-semibold">
-                            {prompt.theme}
-                          </span>
-                          <span className="text-slate-700">.</span>
+          {/* Past Prompts Box */}
+          {showPastPrompts && (
+            <div className="lg:col-span-8">
+              <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                <div className="p-6 border-b border-slate-200">
+                  <h2 className="text-xl font-bold text-slate-800 flex items-center gap-3">
+                    <History className="w-5 h-5 text-indigo-600" />
+                    Past Prompts
+                  </h2>
+                </div>
+                
+                <div className="p-6">
+                  {pastPrompts.length === 0 ? (
+                    <div className="text-center py-8">
+                      <History className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                      <h3 className="text-lg font-semibold text-slate-600 mb-2">No Past Prompts Yet</h3>
+                      <p className="text-slate-500">Generate some prompts to see your history here!</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-3 max-h-80 overflow-y-auto">
+                      {pastPrompts.map((prompt) => (
+                        <div 
+                          key={prompt.id} 
+                          className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer border border-slate-100 hover:border-slate-200"
+                          onClick={() => {
+                            setCurrentWords({
+                              future: prompt.future,
+                              thing: prompt.thing,
+                              theme: prompt.theme
+                            });
+                          }}
+                        >
+                          <div className="text-base leading-relaxed mb-2 flex flex-wrap items-center gap-1">
+                            <span className="text-slate-700">In a </span>
+                            <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-2 py-1 rounded-lg font-semibold text-sm">
+                              {prompt.future}
+                            </span>
+                            <span className="text-slate-700"> energy future, there is a </span>
+                            <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-lg font-semibold text-sm">
+                              {prompt.thing}
+                            </span>
+                            <span className="text-slate-700"> related to </span>
+                            <span className="bg-gradient-to-r from-purple-500 to-violet-500 text-white px-2 py-1 rounded-lg font-semibold text-sm">
+                              {prompt.theme}
+                            </span>
+                            <span className="text-slate-700">.</span>
+                          </div>
+                          <div className="text-xs text-slate-500">
+                            {prompt.timestamp.toLocaleDateString()} at {prompt.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </div>
                         </div>
-                        <div className="text-sm text-slate-500">
-                          {prompt.timestamp.toLocaleDateString()} at {prompt.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+
+        </div>
       </div>
     </div>
   );
