@@ -178,9 +178,6 @@ function App() {
             <p className="text-lg text-slate-700 font-medium">
               Generate unique science fiction writing prompts to spark your creativity
             </p>
-            <p className="text-slate-600">
-              Perfect for writers, game masters, and creative minds looking for inspiration
-            </p>
           </div>
           
           <div className="flex justify-center">
