@@ -220,26 +220,6 @@ function App() {
             <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden h-full">
               
               <div className="p-8 lg:p-12 h-full flex flex-col">
-                {/* Header moved here */}
-                <div className="text-center mb-8">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                      <div className="flex items-center justify-center gap-4 mb-4">
-                        <div className="relative">
-                          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-3 rounded-2xl shadow-lg">
-                            <Lightbulb className="w-6 h-6 text-white" />
-                          </div>
-                          <div className="absolute -top-1 -right-1">
-                            <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
-                          </div>
-                        </div>
-                        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-2xl">
-                          <span className="text-indigo-800 font-semibold">Your Writing Prompt</span>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-
                 {hasValidWords ? (
                   <>
                     {/* Prompt Content */}
