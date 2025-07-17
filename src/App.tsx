@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { RefreshCw, Zap, Sun, History, X } from 'lucide-react';
+import { RefreshCw, Zap, Sun, History } from 'lucide-react';
 
 // Types
 interface WordCategory {
@@ -59,6 +59,11 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
   const [showPastPrompts, setShowPastPrompts] = useState(true);
+  const [animatingWords, setAnimatingWords] = useState({
+    future: false,
+    thing: false,
+    theme: false
+  });
   const [pastPrompts, setPastPrompts] = useState<Array<{
     id: string;
     future: string;
@@ -83,40 +88,87 @@ function App() {
 
   const generateWord = useCallback(async (category: keyof typeof wordCategories) => {
     setIsGenerating(true);
+    setAnimatingWords(prev => ({ ...prev, [category]: true }));
     
-    // Add slight delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 150));
+    // Slot machine animation - cycle through words quickly then slow down
+    const words = wordCategories[category].words;
+    const animationDuration = 2000; // 2 seconds total
+    const fastCycles = 15; // Number of fast cycles
+    const slowCycles = 8; // Number of slow cycles
     
+    // Fast cycling phase
+    for (let i = 0; i < fastCycles; i++) {
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      setCurrentWords(prev => ({ ...prev, [category]: randomWord }));
+      await new Promise(resolve => setTimeout(resolve, 50)); // Fast speed
+    }
+    
+    // Slow down phase
+    for (let i = 0; i < slowCycles; i++) {
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      setCurrentWords(prev => ({ ...prev, [category]: randomWord }));
+      const delay = 80 + (i * 30); // Gradually slow down
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    
+    // Final selection
     const newWord = getRandomWord(category);
     setCurrentWords(prev => ({
       ...prev,
       [category]: newWord
     }));
+    
+    setAnimatingWords(prev => ({ ...prev, [category]: false }));
     setIsGenerating(false);
   }, [getRandomWord]);
 
   const generateAllWords = useCallback(async () => {
     setIsGenerating(true);
+    setAnimatingWords({ future: true, thing: true, theme: true });
     
-    // Add slight delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 200));
+    // Stagger the start of each animation slightly for more dynamic effect
+    const categories: (keyof typeof wordCategories)[] = ['future', 'thing', 'theme'];
+    const animationPromises = categories.map(async (category, index) => {
+      // Slight stagger
+      await new Promise(resolve => setTimeout(resolve, index * 100));
+      
+      const words = wordCategories[category].words;
+      const fastCycles = 15;
+      const slowCycles = 8;
+      
+      // Fast cycling phase
+      for (let i = 0; i < fastCycles; i++) {
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        setCurrentWords(prev => ({ ...prev, [category]: randomWord }));
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+      
+      // Slow down phase
+      for (let i = 0; i < slowCycles; i++) {
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        setCurrentWords(prev => ({ ...prev, [category]: randomWord }));
+        const delay = 80 + (i * 30);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+      
+      // Final selection
+      const finalWord = getRandomWord(category);
+      setCurrentWords(prev => ({ ...prev, [category]: finalWord }));
+      setAnimatingWords(prev => ({ ...prev, [category]: false }));
+    });
     
-    const newWords = {
-      future: getRandomWord('future'),
-      thing: getRandomWord('thing'),
-      theme: getRandomWord('theme')
-    };
-
-    setCurrentWords(newWords);
+    // Wait for all animations to complete
+    await Promise.all(animationPromises);
     setIsGenerating(false);
     
     // Add to past prompts if all words are valid
-    if (newWords.future && newWords.thing && newWords.theme) {
+    if (currentWords.future && currentWords.thing && currentWords.theme && 
+        !currentWords.future.includes('[') && !currentWords.thing.includes('[') && !currentWords.theme.includes('[')) {
       const newPrompt = {
         id: Date.now().toString(),
-        future: newWords.future,
-        thing: newWords.thing,
-        theme: newWords.theme,
+        future: currentWords.future,
+        thing: currentWords.thing,
+        theme: currentWords.theme,
         timestamp: new Date()
       };
       setPastPrompts(prev => [newPrompt, ...prev.slice(0, 9)]); // Keep last 10
@@ -219,7 +271,7 @@ function App() {
                       <div className="text-center text-xl lg:text-2xl xl:text-3xl leading-relaxed space-y-4 max-w-4xl">
                         <div className="flex flex-wrap items-center justify-center gap-2">
                           <span className="text-slate-700">In a</span>
-                          <span className="inline-flex items-center bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                          <span className={`inline-flex items-center bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 ${animatingWords.future ? 'animate-pulse scale-110' : ''}`}>
                             {currentWords.future}
                           </span>
                           <span className="text-slate-700">energy future,</span>
@@ -227,14 +279,14 @@ function App() {
                         
                         <div className="flex flex-wrap items-center justify-center gap-2">
                           <span className="text-slate-700">there is a</span>
-                          <span className="inline-flex items-center bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                          <span className={`inline-flex items-center bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 ${animatingWords.thing ? 'animate-pulse scale-110' : ''}`}>
                             {currentWords.thing}
                           </span>
                         </div>
                         
                         <div className="flex flex-wrap items-center justify-center gap-2">
                           <span className="text-slate-700">related to</span>
-                          <span className="inline-flex items-center bg-gradient-to-r from-purple-500 to-violet-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                          <span className={`inline-flex items-center bg-gradient-to-r from-purple-500 to-violet-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 ${animatingWords.theme ? 'animate-pulse scale-110' : ''}`}>
                             {currentWords.theme}
                           </span>
                           <span className="text-slate-700">.</span>
