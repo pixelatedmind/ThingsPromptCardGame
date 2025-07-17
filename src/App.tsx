@@ -244,7 +244,6 @@ function App() {
           {/* Prompt Preview - Large Feature Box */}
           <div className="lg:col-span-8 lg:row-span-2">
             <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden h-full">
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-green-500"></div>
               
               <div className="p-8 lg:p-12 h-full flex flex-col">
                 {hasValidWords ? (
