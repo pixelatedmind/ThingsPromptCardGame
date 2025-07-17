@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Shuffle, RefreshCw, Copy, Lightbulb, Sparkles, Zap, Sun, Home, Leaf, History } from 'lucide-react';
+import { RefreshCw, Zap, Sun, History, X } from 'lucide-react';
 
 // Types
 interface WordCategory {
@@ -58,6 +58,14 @@ function App() {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
+  const [showPastPrompts, setShowPastPrompts] = useState(false);
+  const [pastPrompts, setPastPrompts] = useState<Array<{
+    id: string;
+    future: string;
+    thing: string;
+    theme: string;
+    timestamp: Date;
+  }>>([]);
 
   // Simulate loading time
   React.useEffect(() => {
@@ -101,6 +109,18 @@ function App() {
 
     setCurrentWords(newWords);
     setIsGenerating(false);
+    
+    // Add to past prompts if all words are valid
+    if (newWords.future && newWords.thing && newWords.theme) {
+      const newPrompt = {
+        id: Date.now().toString(),
+        future: newWords.future,
+        thing: newWords.thing,
+        theme: newWords.theme,
+        timestamp: new Date()
+      };
+      setPastPrompts(prev => [newPrompt, ...prev.slice(0, 9)]); // Keep last 10
+    }
   }, [getRandomWord]);
 
   const hasValidWords = !currentWords.future.includes('[') && 
@@ -234,7 +254,7 @@ function App() {
                       </button>
                       
                       <button
-                        onClick={() => console.log('Past prompts clicked')}
+                        onClick={() => setShowPastPrompts(true)}
                         className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                       >
                         <History className="w-5 h-5" />
@@ -284,7 +304,7 @@ function App() {
                       </button>
                       
                       <button
-                        onClick={() => console.log('Past prompts clicked')}
+                        onClick={() => setShowPastPrompts(true)}
                         className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                       >
                         <History className="w-5 h-5" />
@@ -297,77 +317,72 @@ function App() {
             </div>
           </div>
 
-          {/* Word Cards - Three Equal Columns */}
-          <div className="col-span-1 md:col-span-12 lg:col-span-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-              {Object.entries(wordCategories).map(([key, category], index) => {
-            const isPlaceholder = currentWords[key as keyof typeof currentWords].includes('[');
-            const colors = categoryColors[category.id as keyof typeof categoryColors];
-            
-            return (
-              <div key={key} className="flex-1">
-                <div className="space-y-4">
-                  {/* External Category Title */}
-                  <div className="text-center">
-                    <h3 className={`text-2xl font-bold ${colors.text} uppercase tracking-wide`}>
-                      {category.label}
-                    </h3>
-                  </div>
-                  
-                  {/* Card */}
-                  <div className={`${colors.bg} rounded-2xl shadow-sm border-2 ${colors.border} p-4 md:p-6 h-60 md:h-64 flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-60`}>
-                    {/* Word Display */}
-                    <div className="flex-1 flex flex-col justify-center text-center space-y-4">
-                      <div className="space-y-2">
-                        <p className="text-slate-600 text-xs md:text-sm">
-                          {category.description.split('[WORD]')[0]}
-                        </p>
-                        
-                        <div className={`min-h-[60px] flex items-center justify-center transition-all duration-300 ${
-                          isPlaceholder 
-                            ? 'text-slate-400 italic' 
-                            : `bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent font-bold`
-                        } ${isGenerating ? 'animate-pulse' : ''}`}>
-                          <span className="text-lg md:text-2xl lg:text-3xl text-center leading-tight px-2">
-                            {currentWords[key as keyof typeof currentWords]}
-                          </span>
-                        </div>
-                        
-                        <p className="text-slate-600 text-xs md:text-sm">
-                          {category.description.split('[WORD]')[1]}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Action Buttons */}
-                    <div className="flex gap-2 md:gap-3 mt-4 md:mt-6">
-                      <button
-                        onClick={() => generateWord(key as keyof typeof wordCategories)}
-                        disabled={isGenerating}
-                        className={`flex-1 ${colors.button} disabled:bg-slate-400 text-white px-3 md:px-4 py-1 md:py-2 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-1 md:gap-2 shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm md:text-base`}
-                      >
-                        <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                        <span className="hidden sm:inline">Refresh</span>
-                        <span className="sm:hidden">↻</span>
-                      </button>
-                      
-                      <button
-                        onClick={() => handleCopyWord(currentWords[key as keyof typeof currentWords])}
-                        disabled={isPlaceholder}
-                        className="bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 text-slate-700 px-3 md:px-4 py-1 md:py-2 rounded-xl transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                        title="Copy word"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+        </div>
+        
+        {/* Past Prompts Modal */}
+        {showPastPrompts && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                  <History className="w-6 h-6 text-indigo-600" />
+                  Past Prompts
+                </h2>
+                <button
+                  onClick={() => setShowPastPrompts(false)}
+                  className="p-2 hover:bg-slate-100 rounded-xl transition-colors"
+                >
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
               </div>
-            );
-              })}
+              
+              {/* Modal Content */}
+              <div className="p-6 overflow-y-auto max-h-[60vh]">
+                {pastPrompts.length === 0 ? (
+                  <div className="text-center py-12">
+                    <History className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-slate-600 mb-2">No Past Prompts Yet</h3>
+                    <p className="text-slate-500">Generate some prompts to see your history here!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {pastPrompts.map((prompt) => (
+                      <div key={prompt.id} className="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition-colors cursor-pointer"
+                           onClick={() => {
+                             setCurrentWords({
+                               future: prompt.future,
+                               thing: prompt.thing,
+                               theme: prompt.theme
+                             });
+                             setShowPastPrompts(false);
+                           }}>
+                        <div className="text-lg leading-relaxed mb-2">
+                          <span className="text-slate-700">In a </span>
+                          <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-lg font-semibold">
+                            {prompt.future}
+                          </span>
+                          <span className="text-slate-700"> energy future, there is a </span>
+                          <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-1 rounded-lg font-semibold">
+                            {prompt.thing}
+                          </span>
+                          <span className="text-slate-700"> related to </span>
+                          <span className="bg-gradient-to-r from-purple-500 to-violet-500 text-white px-3 py-1 rounded-lg font-semibold">
+                            {prompt.theme}
+                          </span>
+                          <span className="text-slate-700">.</span>
+                        </div>
+                        <div className="text-sm text-slate-500">
+                          {prompt.timestamp.toLocaleDateString()} at {prompt.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
