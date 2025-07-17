@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Shuffle, RefreshCw, Copy, Lightbulb, Sparkles } from 'lucide-react';
+import { Shuffle, RefreshCw, Copy, Lightbulb, Sparkles, Zap, Sun, Home, Leaf } from 'lucide-react';
 
 // Types
 interface WordCategory {
@@ -13,50 +13,59 @@ interface WordCategory {
 const wordCategories: Record<string, WordCategory> = {
   future: {
     id: 'future',
-    label: 'Future',
-    description: 'In a [WORD] future',
+    label: 'Energy Future',
+    description: 'In a [WORD] energy future',
     words: [
-      'Tomorrow', 'Robotics', 'Evolution', 'Innovation', 'Time-travel', 
-      'Singularity', 'Quantum', 'Utopia', 'Nano-tech', 'Intergalactic', 
-      'Virtuality', 'Cybernetic', 'Terraform', 'Dystopian', 'Post-apocalyptic',
-      'Bioengineered', 'Neural', 'Holographic', 'Synthetic', 'Augmented',
-      'Digital', 'Cosmic', 'Transcendent', 'Automated', 'Sustainable'
+      'Sustainable', 'Carbon-neutral', 'Net-zero', 'Renewable', 'Clean', 
+      'Green', 'Solar-powered', 'Wind-driven', 'Efficient', 'Smart', 
+      'Decentralized', 'Community-owned', 'Grid-independent', 'Resilient', 'Innovative',
+      'Electrified', 'Hydrogen-based', 'Battery-backed', 'Micro-grid', 'Self-sufficient',
+      'Eco-friendly', 'Low-carbon', 'Energy-positive', 'Automated', 'Connected'
     ]
   },
   thing: {
     id: 'thing',
-    label: 'Thing',
+    label: 'Solution',
     description: 'There is a [WORD]',
     words: [
-      'Object', 'Instrument', 'Gadget', 'Relic', 'Utensil', 'Apparatus', 
-      'Device', 'Tool', 'Implement', 'Artifact', 'Commodity', 'Contraption', 
-      'Mechanism', 'Interface', 'Portal', 'Beacon', 'Catalyst', 'Vessel',
-      'Engine', 'Generator', 'Scanner', 'Transmitter', 'Processor', 'Core',
-      'Matrix', 'Network', 'System', 'Protocol', 'Algorithm'
+      'Solar panel system', 'Heat pump', 'Battery storage unit', 'Smart thermostat', 'Energy monitor', 
+      'Wind turbine', 'Geothermal system', 'Insulation upgrade', 'LED lighting system', 'Smart home hub', 
+      'Electric vehicle charger', 'Rainwater harvesting system', 'Green roof installation', 'Energy audit tool', 'Power optimizer',
+      'Micro-inverter', 'Home energy management system', 'Weatherization kit', 'Solar water heater', 'Backup generator',
+      'Smart grid connection', 'Energy-efficient appliance', 'Programmable controller', 'Monitoring dashboard', 'Efficiency retrofit'
     ]
   },
   theme: {
     id: 'theme',
-    label: 'Theme',
+    label: 'Focus Area',
     description: 'Related to [WORD]',
     words: [
-      'Harmony', 'Chaos', 'Exploration', 'Redemption', 'Survival', 
-      'Transformation', 'Adventure', 'Mystery', 'Rebellion', 'Creation', 
-      'Conflict', 'Discovery', 'Enlightenment', 'Identity', 'Freedom',
-      'Connection', 'Isolation', 'Progress', 'Tradition', 'Balance',
-      'Power', 'Sacrifice', 'Hope', 'Fear', 'Unity', 'Diversity'
+      'Cost savings', 'Energy independence', 'Environmental impact', 'Home comfort', 'Property value', 
+      'Grid resilience', 'Community benefits', 'Job creation', 'Innovation', 'Sustainability', 
+      'Climate action', 'Energy security', 'Local economy', 'Health benefits', 'Future generations',
+      'Carbon reduction', 'Energy efficiency', 'Smart technology', 'Renewable resources', 'Green jobs',
+      'Energy equity', 'Grid modernization', 'Workforce development', 'Economic growth', 'Environmental justice'
     ]
   }
 };
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [currentWords, setCurrentWords] = useState({
-    future: '[FUTURE WORD]',
-    thing: '[THING WORD]',
-    theme: '[THEME WORD]'
+    future: '[ENERGY FUTURE]',
+    thing: '[SOLUTION]',
+    theme: '[FOCUS AREA]'
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
+
+  // Simulate loading time
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const getRandomWord = useCallback((category: keyof typeof wordCategories): string => {
     const words = wordCategories[category].words;
@@ -115,6 +124,56 @@ function App() {
       console.error('Failed to copy to clipboard:', error);
     }
   };
+
+  // Loading Screen
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center space-y-8 max-w-md mx-auto px-6">
+          {/* Animated Logo */}
+          <div className="relative">
+            <div className="flex items-center justify-center space-x-4 mb-6">
+              <div className="relative">
+                <Sun className="w-16 h-16 text-yellow-500 animate-spin" style={{ animationDuration: '3s' }} />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Zap className="w-8 h-8 text-yellow-600 animate-pulse" />
+                </div>
+              </div>
+              <div className="flex flex-col space-y-2">
+                <Home className="w-12 h-12 text-green-600 animate-bounce" style={{ animationDelay: '0.5s' }} />
+                <Leaf className="w-10 h-10 text-emerald-500 animate-bounce" style={{ animationDelay: '1s' }} />
+              </div>
+            </div>
+            
+            {/* Pulsing rings */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 border-2 border-green-200 rounded-full animate-ping opacity-20"></div>
+              <div className="absolute w-24 h-24 border-2 border-blue-200 rounded-full animate-ping opacity-30" style={{ animationDelay: '0.5s' }}></div>
+            </div>
+          </div>
+
+          {/* Loading Text */}
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              Clean Energy Solutions
+            </h1>
+            <p className="text-lg text-slate-600">
+              Powering sustainable innovation
+            </p>
+            
+            {/* Loading bar */}
+            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full animate-pulse"></div>
+            </div>
+            
+            <p className="text-sm text-slate-500 animate-pulse">
+              Initializing clean energy prompt generator...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Category colors for consistent theming
   const categoryColors = {
@@ -206,7 +265,7 @@ function App() {
                           <span className="inline-flex items-center bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                             {currentWords.future}
                           </span>
-                          <span className="text-slate-700">future,</span>
+                          <span className="text-slate-700">energy future,</span>
                         </div>
                         
                         <div className="flex flex-wrap items-center justify-center gap-2">
@@ -263,7 +322,7 @@ function App() {
                           Ready to Create?
                         </h3>
                         <p className="text-slate-600 max-w-md mx-auto text-lg">
-                          Generate individual words or create a complete prompt combination
+                          Generate clean energy solutions or create a complete project prompt
                         </p>
                       </div>
                     </div>
@@ -288,7 +347,7 @@ function App() {
                     Generate Complete
                   </h3>
                   <p className="text-sm text-slate-600">
-                    Create a full prompt with all three elements
+                    Create a complete clean energy project prompt
                   </p>
                 </div>
                 
