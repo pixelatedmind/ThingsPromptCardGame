@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Shuffle, Download, Sparkles, RefreshCw, Copy, History, Clock, X, Share2, Trash2 } from 'lucide-react';
+import { Shuffle, RefreshCw, Copy, History, Clock, X, Share2, Trash2, Sparkles } from 'lucide-react';
 import { useWordGenerator } from './hooks/useWordGenerator';
 import { wordCategories } from './data/wordCategories';
-import { GeneratedCombination } from './types';
 
 function App() {
   const [showHistory, setShowHistory] = useState(false);
@@ -45,6 +44,7 @@ function App() {
     future: {
       gradient: 'from-blue-500 to-cyan-500',
       bg: 'bg-blue-50',
+      mutedBg: 'bg-blue-25',
       border: 'border-blue-200',
       text: 'text-blue-700',
       button: 'bg-blue-600 hover:bg-blue-700'
@@ -52,6 +52,7 @@ function App() {
     thing: {
       gradient: 'from-green-500 to-emerald-500',
       bg: 'bg-green-50',
+      mutedBg: 'bg-green-25',
       border: 'border-green-200',
       text: 'text-green-700',
       button: 'bg-green-600 hover:bg-green-700'
@@ -59,6 +60,7 @@ function App() {
     theme: {
       gradient: 'from-purple-500 to-violet-500',
       bg: 'bg-purple-50',
+      mutedBg: 'bg-purple-25',
       border: 'border-purple-200',
       text: 'text-purple-700',
       button: 'bg-purple-600 hover:bg-purple-700'
@@ -195,7 +197,7 @@ function App() {
           </div>
 
           {/* Generate All Button - Tall Side Panel */}
-          <div className="lg:col-span-4 lg:row-span-1">
+          <div className="lg:col-span-4 lg:row-span-2">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 h-full">
               <div className="h-full flex flex-col justify-center text-center space-y-6">
                 <div className="flex justify-center">
@@ -225,96 +227,66 @@ function App() {
             </div>
           </div>
 
-          {/* Export Button */}
-          <div className="lg:col-span-4 lg:row-span-1">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 h-full">
-              <div className="h-full flex flex-col justify-center text-center space-y-6">
-                <div className="flex justify-center">
-                  <div className="bg-gradient-to-br from-slate-500 to-slate-600 p-4 rounded-2xl shadow-lg">
-                    <Download className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-slate-800">
-                    Export Current
-                  </h3>
-                  <p className="text-sm text-slate-600">
-                    Share your current combination
-                  </p>
-                </div>
-                
-                <button
-                  onClick={() => exportCombination()}
-                  disabled={!hasValidWords || isGenerating}
-                  className="w-full bg-white hover:bg-slate-50 disabled:bg-slate-100 disabled:text-slate-400 text-slate-700 border border-slate-300 px-6 py-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Word Cards - Three Equal Columns */}
+          {/* Word Cards - Three Equal Columns with External Titles */}
           {Object.entries(wordCategories).map(([key, category]) => {
             const isPlaceholder = currentWords[key as keyof typeof currentWords].includes('[');
             const colors = categoryColors[category.id as keyof typeof categoryColors];
             
             return (
               <div key={key} className="lg:col-span-4">
-                <div className={`bg-white rounded-2xl shadow-sm border-2 ${colors.border} p-6 h-80 flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-60`}>
-                  {/* Category Header */}
-                  <div className="text-center mb-6">
-                    <div className={`inline-flex px-4 py-2 rounded-full ${colors.bg} mb-3`}>
-                      <span className={`text-sm font-semibold ${colors.text} uppercase tracking-wide`}>
-                        {category.label}
-                      </span>
-                    </div>
+                <div className="space-y-4">
+                  {/* External Category Title */}
+                  <div className="text-center">
+                    <h3 className={`text-2xl font-bold ${colors.text} uppercase tracking-wide`}>
+                      {category.label}
+                    </h3>
                   </div>
                   
-                  {/* Word Display */}
-                  <div className="flex-1 flex flex-col justify-center text-center space-y-4">
-                    <div className="space-y-2">
-                      <p className="text-slate-600 text-sm">
-                        {category.description.split('[WORD]')[0]}
-                      </p>
-                      
-                      <div className={`min-h-[80px] flex items-center justify-center transition-all duration-300 ${
-                        isPlaceholder 
-                          ? 'text-slate-400 italic' 
-                          : `bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent font-bold`
-                      } ${isGenerating ? 'animate-pulse' : ''}`}>
-                        <span className="text-2xl lg:text-3xl text-center leading-tight">
-                          {currentWords[key as keyof typeof currentWords]}
-                        </span>
+                  {/* Card with Muted Background */}
+                  <div className={`${colors.bg} rounded-2xl shadow-sm border-2 ${colors.border} p-6 h-80 flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-60`}>
+                    {/* Word Display */}
+                    <div className="flex-1 flex flex-col justify-center text-center space-y-4">
+                      <div className="space-y-2">
+                        <p className="text-slate-600 text-sm">
+                          {category.description.split('[WORD]')[0]}
+                        </p>
+                        
+                        <div className={`min-h-[80px] flex items-center justify-center transition-all duration-300 ${
+                          isPlaceholder 
+                            ? 'text-slate-400 italic' 
+                            : `bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent font-bold`
+                        } ${isGenerating ? 'animate-pulse' : ''}`}>
+                          <span className="text-2xl lg:text-3xl text-center leading-tight">
+                            {currentWords[key as keyof typeof currentWords]}
+                          </span>
+                        </div>
+                        
+                        <p className="text-slate-600 text-sm">
+                          {category.description.split('[WORD]')[1]}
+                        </p>
                       </div>
-                      
-                      <p className="text-slate-600 text-sm">
-                        {category.description.split('[WORD]')[1]}
-                      </p>
                     </div>
-                  </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex gap-3 mt-6">
-                    <button
-                      onClick={() => generateWord(key as keyof typeof wordCategories)}
-                      disabled={isGenerating}
-                      className={`flex-1 ${colors.button} disabled:bg-slate-400 text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2`}
-                    >
-                      <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
-                      Refresh
-                    </button>
                     
-                    <button
-                      onClick={() => handleCopyWord(currentWords[key as keyof typeof currentWords])}
-                      disabled={isPlaceholder}
-                      className="bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 text-slate-700 px-4 py-3 rounded-xl transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                      title="Copy word"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="flex gap-3 mt-6">
+                      <button
+                        onClick={() => generateWord(key as keyof typeof wordCategories)}
+                        disabled={isGenerating}
+                        className={`flex-1 ${colors.button} disabled:bg-slate-400 text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2`}
+                      >
+                        <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
+                        Refresh
+                      </button>
+                      
+                      <button
+                        onClick={() => handleCopyWord(currentWords[key as keyof typeof currentWords])}
+                        disabled={isPlaceholder}
+                        className="bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 text-slate-700 px-4 py-3 rounded-xl transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                        title="Copy word"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

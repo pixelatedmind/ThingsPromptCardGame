@@ -3,6 +3,17 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        blue: {
+          25: '#f8faff',
+        },
+        green: {
+          25: '#f7fdf9',
+        },
+        purple: {
+          25: '#faf8ff',
+        },
+      },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
