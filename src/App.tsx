@@ -212,32 +212,32 @@ function App() {
       </div>
       
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <header className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="text-center">
-              <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                Things Prompt
-              </h1>
-              <p className="text-xl lg:text-2xl font-medium text-slate-600">
-                Card Game
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex justify-center">
-            <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
-          </div>
-        </header>
-
         {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 auto-rows-min">
+        <div className="grid grid-cols-1 lg:grid-cols-8 gap-6 auto-rows-min">
           
           {/* Prompt Preview - Large Feature Box */}
-          <div className="lg:col-span-8 lg:row-span-2">
+          <div className="lg:col-span-8">
             <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden h-full">
               
               <div className="p-8 lg:p-12 h-full flex flex-col">
+                {/* Header moved here */}
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="text-center">
+                      <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                        Things Prompt
+                      </h1>
+                      <p className="text-xl lg:text-2xl font-medium text-slate-600">
+                        Card Game
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-center mb-6">
+                    <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
+                  </div>
+                </div>
+
                 {hasValidWords ? (
                   <>
                     {/* Header */}
@@ -288,29 +288,29 @@ function App() {
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
                       <button
+                        onClick={generateAllWords}
+                        disabled={isGenerating}
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
+                        Generate New
+                      </button>
+                      
+                      <button
                         onClick={handleCopyPrompt}
                         className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                           copyFeedback 
                             ? 'bg-green-600 text-white focus:ring-green-500' 
-                            : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white focus:ring-indigo-500'
+                            : 'bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-300 focus:ring-slate-500'
                         }`}
                       >
                         <Copy className="w-5 h-5" />
                         {copyFeedback ? 'Copied!' : 'Copy Prompt'}
                       </button>
-                      
-                      <button
-                        onClick={generateAllWords}
-                        disabled={isGenerating}
-                        className="bg-white hover:bg-slate-50 disabled:bg-slate-100 text-slate-700 border-2 border-slate-300 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                      >
-                        <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
-                        Generate New
-                      </button>
                     </div>
                   </>
                 ) : (
-                  <div className="h-full flex items-center justify-center">
+                  <div className="flex-1 flex items-center justify-center">
                     <div className="text-center space-y-6">
                       <div className="flex justify-center">
                         <div className="bg-slate-100 p-6 rounded-3xl">
@@ -325,6 +325,15 @@ function App() {
                           Generate clean energy solutions or create a complete project prompt
                         </p>
                       </div>
+                      
+                      <button
+                        onClick={generateAllWords}
+                        disabled={isGenerating}
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mx-auto"
+                      >
+                        <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
+                        Generate New
+                      </button>
                     </div>
                   </div>
                 )}
@@ -332,39 +341,8 @@ function App() {
             </div>
           </div>
 
-          {/* Generate All Button - Tall Side Panel */}
-          <div className="lg:col-span-4 lg:row-span-2">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 h-full">
-              <div className="h-full flex flex-col justify-center text-center space-y-6">
-                <div className="flex justify-center">
-                  <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-2xl shadow-lg">
-                    <Shuffle className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-slate-800">
-                    Generate Complete
-                  </h3>
-                  <p className="text-sm text-slate-600">
-                    Create a complete clean energy project prompt
-                  </p>
-                </div>
-                
-                <button
-                  onClick={generateAllWords}
-                  disabled={isGenerating}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-6 py-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <Shuffle className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
-                  Generate All
-                </button>
-              </div>
-            </div>
-          </div>
-
           {/* Word Cards - Three Equal Columns */}
-          <div className="col-span-1 md:col-span-12 lg:col-span-12">
+          <div className="col-span-1 md:col-span-12 lg:col-span-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
               {Object.entries(wordCategories).map(([key, category], index) => {
             const isPlaceholder = currentWords[key as keyof typeof currentWords].includes('[');
