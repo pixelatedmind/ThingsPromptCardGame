@@ -260,46 +260,18 @@ function App() {
                         <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
                         Generate New
                       </button>
-                      
-                      <button
-                        onClick={handleCopyPrompt}
-                        className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                          copyFeedback 
-                            ? 'bg-green-600 text-white focus:ring-green-500' 
-                            : 'bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-300 focus:ring-slate-500'
-                        }`}
-                      >
-                        <Copy className="w-5 h-5" />
-                        {copyFeedback ? 'Copied!' : 'Copy Prompt'}
-                      </button>
                     </div>
                   </>
                 ) : (
                   <div className="flex-1 flex items-center justify-center">
-                    <div className="text-center space-y-6">
-                      <div className="flex justify-center">
-                        <div className="bg-slate-100 p-6 rounded-3xl">
-                          <Sparkles className="w-12 h-12 text-slate-400" />
-                        </div>
-                      </div>
-                      <div className="space-y-3">
-                        <h3 className="text-2xl font-semibold text-slate-700">
-                          Ready to Create?
-                        </h3>
-                        <p className="text-slate-600 max-w-md mx-auto text-lg">
-                          Generate clean energy solutions or create a complete project prompt
-                        </p>
-                      </div>
-                      
-                      <button
-                        onClick={generateAllWords}
-                        disabled={isGenerating}
-                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mx-auto"
-                      >
-                        <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
-                        Generate New
-                      </button>
-                    </div>
+                    <button
+                      onClick={generateAllWords}
+                      disabled={isGenerating}
+                      className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
+                      Generate New
+                    </button>
                   </div>
                 )}
               </div>
