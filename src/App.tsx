@@ -239,6 +239,7 @@ function App() {
                       </div>
                     </div>
 
+                  <>
                     {/* Prompt Content */}
                     <div className="flex-1 flex items-center justify-center">
                       <div className="text-center text-xl lg:text-2xl xl:text-3xl leading-relaxed space-y-4 max-w-4xl">
