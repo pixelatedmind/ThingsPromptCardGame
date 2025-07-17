@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Shuffle, RefreshCw, Copy, Lightbulb, Sparkles, Zap, Sun, Home, Leaf } from 'lucide-react';
+import { Shuffle, RefreshCw, Copy, Lightbulb, Sparkles, Zap, Sun, Home, Leaf, History } from 'lucide-react';
 
 // Types
 interface WordCategory {
@@ -260,6 +260,14 @@ function App() {
                         <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
                         Generate New
                       </button>
+                      
+                      <button
+                        onClick={() => console.log('Past prompts clicked')}
+                        className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                      >
+                        <History className="w-5 h-5" />
+                        Past Prompts
+                      </button>
                     </div>
                   </>
                 ) : (
@@ -302,6 +310,14 @@ function App() {
                         <RefreshCw className={`w-5 h-5 ${isGenerating ? 'animate-spin' : ''}`} />
                         Generate New
                       </button>
+                      
+                      <button
+                        onClick={() => console.log('Past prompts clicked')}
+                        className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                      >
+                        <History className="w-5 h-5" />
+                        Past Prompts
+                      </button>
                     </div>
                   </>
                 )}
@@ -327,7 +343,7 @@ function App() {
                   </div>
                   
                   {/* Card */}
-                  <div className={`${colors.bg} rounded-2xl shadow-sm border-2 ${colors.border} p-4 md:p-6 h-72 md:h-80 flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-60`}>
+                  <div className={`${colors.bg} rounded-2xl shadow-sm border-2 ${colors.border} p-4 md:p-6 h-60 md:h-64 flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-60`}>
                     {/* Word Display */}
                     <div className="flex-1 flex flex-col justify-center text-center space-y-4">
                       <div className="space-y-2">
@@ -335,7 +351,7 @@ function App() {
                           {category.description.split('[WORD]')[0]}
                         </p>
                         
-                        <div className={`min-h-[80px] flex items-center justify-center transition-all duration-300 ${
+                        <div className={`min-h-[60px] flex items-center justify-center transition-all duration-300 ${
                           isPlaceholder 
                             ? 'text-slate-400 italic' 
                             : `bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent font-bold`
@@ -356,7 +372,7 @@ function App() {
                       <button
                         onClick={() => generateWord(key as keyof typeof wordCategories)}
                         disabled={isGenerating}
-                        className={`flex-1 ${colors.button} disabled:bg-slate-400 text-white px-3 md:px-4 py-2 md:py-3 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-1 md:gap-2 shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm md:text-base`}
+                        className={`flex-1 ${colors.button} disabled:bg-slate-400 text-white px-3 md:px-4 py-1 md:py-2 rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-1 md:gap-2 shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm md:text-base`}
                       >
                         <RefreshCw className={`w-4 h-4 ${isGenerating ? 'animate-spin' : ''}`} />
                         <span className="hidden sm:inline">Refresh</span>
@@ -366,7 +382,7 @@ function App() {
                       <button
                         onClick={() => handleCopyWord(currentWords[key as keyof typeof currentWords])}
                         disabled={isPlaceholder}
-                        className="bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 text-slate-700 px-3 md:px-4 py-2 md:py-3 rounded-xl transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                        className="bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-400 text-slate-700 px-3 md:px-4 py-1 md:py-2 rounded-xl transition-all duration-200 flex items-center justify-center shadow-sm hover:shadow-md transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                         title="Copy word"
                       >
                         <Copy className="w-4 h-4" />
