@@ -1,21 +1,98 @@
-import React, { useState } from 'react';
-import { Shuffle, RefreshCw, Copy, History, Clock, X, Share2, Trash2, Sparkles } from 'lucide-react';
-import { useWordGenerator } from './hooks/useWordGenerator';
-import { wordCategories } from './data/wordCategories';
+import React, { useState, useCallback } from 'react';
+import { Shuffle, RefreshCw, Copy, Lightbulb, Sparkles } from 'lucide-react';
+
+// Types
+interface WordCategory {
+  id: string;
+  label: string;
+  description: string;
+  words: string[];
+}
+
+// Word data
+const wordCategories: Record<string, WordCategory> = {
+  future: {
+    id: 'future',
+    label: 'Future',
+    description: 'In a [WORD] future',
+    words: [
+      'Tomorrow', 'Robotics', 'Evolution', 'Innovation', 'Time-travel', 
+      'Singularity', 'Quantum', 'Utopia', 'Nano-tech', 'Intergalactic', 
+      'Virtuality', 'Cybernetic', 'Terraform', 'Dystopian', 'Post-apocalyptic',
+      'Bioengineered', 'Neural', 'Holographic', 'Synthetic', 'Augmented',
+      'Digital', 'Cosmic', 'Transcendent', 'Automated', 'Sustainable'
+    ]
+  },
+  thing: {
+    id: 'thing',
+    label: 'Thing',
+    description: 'There is a [WORD]',
+    words: [
+      'Object', 'Instrument', 'Gadget', 'Relic', 'Utensil', 'Apparatus', 
+      'Device', 'Tool', 'Implement', 'Artifact', 'Commodity', 'Contraption', 
+      'Mechanism', 'Interface', 'Portal', 'Beacon', 'Catalyst', 'Vessel',
+      'Engine', 'Generator', 'Scanner', 'Transmitter', 'Processor', 'Core',
+      'Matrix', 'Network', 'System', 'Protocol', 'Algorithm'
+    ]
+  },
+  theme: {
+    id: 'theme',
+    label: 'Theme',
+    description: 'Related to [WORD]',
+    words: [
+      'Harmony', 'Chaos', 'Exploration', 'Redemption', 'Survival', 
+      'Transformation', 'Adventure', 'Mystery', 'Rebellion', 'Creation', 
+      'Conflict', 'Discovery', 'Enlightenment', 'Identity', 'Freedom',
+      'Connection', 'Isolation', 'Progress', 'Tradition', 'Balance',
+      'Power', 'Sacrifice', 'Hope', 'Fear', 'Unity', 'Diversity'
+    ]
+  }
+};
 
 function App() {
-  const [showHistory, setShowHistory] = useState(false);
+  const [currentWords, setCurrentWords] = useState({
+    future: '[FUTURE WORD]',
+    thing: '[THING WORD]',
+    theme: '[THEME WORD]'
+  });
+  const [isGenerating, setIsGenerating] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState(false);
-  
-  const {
-    currentWords,
-    history,
-    isGenerating,
-    generateWord,
-    generateAllWords,
-    clearHistory,
-    exportCombination
-  } = useWordGenerator();
+
+  const getRandomWord = useCallback((category: keyof typeof wordCategories): string => {
+    const words = wordCategories[category].words;
+    const randomIndex = Math.floor(Math.random() * words.length);
+    return words[randomIndex];
+  }, []);
+
+  const generateWord = useCallback(async (category: keyof typeof wordCategories) => {
+    setIsGenerating(true);
+    
+    // Add slight delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 150));
+    
+    const newWord = getRandomWord(category);
+    setCurrentWords(prev => ({
+      ...prev,
+      [category]: newWord
+    }));
+    setIsGenerating(false);
+  }, [getRandomWord]);
+
+  const generateAllWords = useCallback(async () => {
+    setIsGenerating(true);
+    
+    // Add slight delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    const newWords = {
+      future: getRandomWord('future'),
+      thing: getRandomWord('thing'),
+      theme: getRandomWord('theme')
+    };
+
+    setCurrentWords(newWords);
+    setIsGenerating(false);
+  }, [getRandomWord]);
 
   const hasValidWords = !currentWords.future.includes('[') && 
                        !currentWords.thing.includes('[') && 
@@ -44,7 +121,6 @@ function App() {
     future: {
       gradient: 'from-blue-500 to-cyan-500',
       bg: 'bg-blue-50',
-      mutedBg: 'bg-blue-25',
       border: 'border-blue-200',
       text: 'text-blue-700',
       button: 'bg-blue-600 hover:bg-blue-700'
@@ -52,7 +128,6 @@ function App() {
     thing: {
       gradient: 'from-green-500 to-emerald-500',
       bg: 'bg-green-50',
-      mutedBg: 'bg-green-25',
       border: 'border-green-200',
       text: 'text-green-700',
       button: 'bg-green-600 hover:bg-green-700'
@@ -60,7 +135,6 @@ function App() {
     theme: {
       gradient: 'from-purple-500 to-violet-500',
       bg: 'bg-purple-50',
-      mutedBg: 'bg-purple-25',
       border: 'border-purple-200',
       text: 'text-purple-700',
       button: 'bg-purple-600 hover:bg-purple-700'
@@ -84,7 +158,10 @@ function App() {
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="relative">
               <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl shadow-lg">
-                <Sparkles className="w-8 h-8 text-white" />
+                <Lightbulb className="w-8 h-8 text-white" />
+              </div>
+              <div className="absolute -top-1 -right-1">
+                <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
               </div>
             </div>
             <div className="text-left">
@@ -95,6 +172,15 @@ function App() {
                 Card Game
               </p>
             </div>
+          </div>
+          
+          <div className="max-w-3xl mx-auto space-y-3 mb-6">
+            <p className="text-lg text-slate-700 font-medium">
+              Generate unique science fiction writing prompts to spark your creativity
+            </p>
+            <p className="text-slate-600">
+              Perfect for writers, game masters, and creative minds looking for inspiration
+            </p>
           </div>
           
           <div className="flex justify-center">
@@ -227,7 +313,7 @@ function App() {
             </div>
           </div>
 
-          {/* Word Cards - Three Equal Columns with External Titles */}
+          {/* Word Cards - Three Equal Columns */}
           {Object.entries(wordCategories).map(([key, category]) => {
             const isPlaceholder = currentWords[key as keyof typeof currentWords].includes('[');
             const colors = categoryColors[category.id as keyof typeof categoryColors];
@@ -242,7 +328,7 @@ function App() {
                     </h3>
                   </div>
                   
-                  {/* Card with Muted Background */}
+                  {/* Card */}
                   <div className={`${colors.bg} rounded-2xl shadow-sm border-2 ${colors.border} p-6 h-80 flex flex-col transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-opacity-60`}>
                     {/* Word Display */}
                     <div className="flex-1 flex flex-col justify-center text-center space-y-4">
@@ -293,107 +379,6 @@ function App() {
             );
           })}
         </div>
-
-        {/* History FAB */}
-        {history.length > 0 && (
-          <button
-            onClick={() => setShowHistory(true)}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white p-4 rounded-2xl shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 z-10 transform hover:scale-110"
-          >
-            <History className="w-6 h-6" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center shadow-lg">
-              {history.length}
-            </span>
-          </button>
-        )}
-
-        {/* History Modal */}
-        {showHistory && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-            <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[85vh] overflow-hidden">
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100">
-                <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-2 rounded-xl">
-                    <Clock className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-900">Generation History</h2>
-                    <p className="text-sm text-slate-600">{history.length} saved prompts</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={clearHistory}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50 p-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                    title="Clear all history"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => setShowHistory(false)}
-                    className="text-slate-500 hover:text-slate-700 hover:bg-slate-100 p-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-              
-              {/* Content */}
-              <div className="overflow-y-auto max-h-[60vh] p-6">
-                <div className="space-y-4">
-                  {history.map((combination, index) => (
-                    <div
-                      key={combination.id}
-                      className="group bg-slate-50 hover:bg-slate-100 rounded-2xl p-6 transition-all duration-200 border border-slate-200 hover:border-slate-300 hover:shadow-md"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 space-y-3">
-                          {/* Prompt Text */}
-                          <div className="text-slate-900 leading-relaxed">
-                            In a{' '}
-                            <span className="inline-flex items-center bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
-                              {combination.future}
-                            </span>{' '}
-                            future, there is a{' '}
-                            <span className="inline-flex items-center bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
-                              {combination.thing}
-                            </span>{' '}
-                            related to{' '}
-                            <span className="inline-flex items-center bg-gradient-to-r from-purple-500 to-violet-500 text-white px-2 py-1 rounded-lg text-sm font-semibold">
-                              {combination.theme}
-                            </span>
-                            .
-                          </div>
-                          
-                          {/* Metadata */}
-                          <div className="flex items-center gap-4 text-xs text-slate-500">
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {combination.timestamp.toLocaleString()}
-                            </span>
-                            <span className="bg-slate-200 px-2 py-1 rounded-full">
-                              #{history.length - index}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        {/* Action Button */}
-                        <button
-                          onClick={() => exportCombination(combination)}
-                          className="ml-4 opacity-0 group-hover:opacity-100 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 p-2 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          title="Share this combination"
-                        >
-                          <Share2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
