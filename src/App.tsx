@@ -222,24 +222,6 @@ function App() {
               <div className="p-8 lg:p-12 h-full flex flex-col">
                 {/* Header moved here */}
                 <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-4 mb-6">
-                    <div className="text-center">
-                      <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                        Things Prompt
-                      </h1>
-                      <p className="text-xl lg:text-2xl font-medium text-slate-600">
-                        Card Game
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-center mb-6">
-                    <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
-                  </div>
-                </div>
-
-                {hasValidWords ? (
-                  <>
                     {/* Header */}
                     <div className="text-center mb-8">
                       <div className="flex items-center justify-center gap-4 mb-4">
