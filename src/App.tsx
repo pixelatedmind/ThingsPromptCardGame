@@ -215,15 +215,7 @@ function App() {
         {/* Header */}
         <header className="text-center mb-8">
           <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="relative">
-              <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-4 rounded-2xl shadow-lg">
-                <Lightbulb className="w-8 h-8 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1">
-                <Sparkles className="w-5 h-5 text-yellow-400 animate-pulse" />
-              </div>
-            </div>
-            <div className="text-left">
+            <div className="text-center">
               <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
                 Things Prompt
               </h1>
@@ -250,9 +242,18 @@ function App() {
                   <>
                     {/* Header */}
                     <div className="text-center mb-8">
-                      <div className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-2xl mb-4">
-                        <Sparkles className="w-5 h-5 text-indigo-600" />
-                        <span className="text-indigo-800 font-semibold">Your Writing Prompt</span>
+                      <div className="flex items-center justify-center gap-4 mb-4">
+                        <div className="relative">
+                          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 p-3 rounded-2xl shadow-lg">
+                            <Lightbulb className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="absolute -top-1 -right-1">
+                            <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
+                          </div>
+                        </div>
+                        <div className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 rounded-2xl">
+                          <span className="text-indigo-800 font-semibold">Your Writing Prompt</span>
+                        </div>
                       </div>
                     </div>
 
